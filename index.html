@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5ASIDE Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .card-list {
+            margin-top: 20px;
+        }
+        .card-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .edit-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+        .card-item p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Card Database</h1>
+        <div>
+            <input type="text" id="searchInput" placeholder="Search cards..." onkeyup="searchCards()">
+        </div>
+        <div>
+            <input type="text" id="cardName" placeholder="Card Name">
+            <input type="text" id="cardDetails" placeholder="Card Details">
+            <input type="number" id="cardWins" placeholder="Wins" min="0">
+            <input type="number" id="cardLosses" placeholder="Losses" min="0">
+            <input type="number" id="cardTies" placeholder="Ties" min="0">
+            <input type="text" id="cardBallonDior" placeholder="Ballon Dior">
+            <button onclick="addCard()">Add Card</button>
+        </div>
+        <div class="card-list" id="cardList"></div>
+    </div>
+
+    <script>
+        let cardList = [];
+        let editIndex = -1;
+
+        function addCard() {
+            const name = document.getElementById('cardName').value;
+            const details = document.getElementById('cardDetails').value;
+            const wins = parseInt(document.getElementById('cardWins').value) || 0;
+            const losses = parseInt(document.getElementById('cardLosses').value) || 0;
+            const ties = parseInt(document.getElementById('cardTies').value) || 0;
+            const ballonDior = document.getElementById('cardBallonDior').value;
+
+            if (name && details) {
+                if (editIndex === -1) {
+                    cardList.push({ name, details, wins, losses, ties, ballonDior });
+                } else {
+                    cardList[editIndex] = { name, details, wins, losses, ties, ballonDior };
+                    editIndex = -1;
+                }
+                clearForm();
+                displayCards();
+            } else {
+                alert('Please enter both name and details.');
+            }
+        }
+
+        function editCard(index) {
+            const card = cardList[index];
+            document.getElementById('cardName').value = card.name;
+            document.getElementById('cardDetails').value = card.details;
+            document.getElementById('cardWins').value = card.wins;
+            document.getElementById('cardLosses').value = card.losses;
+            document.getElementById('cardTies').value = card.ties;
+            document.getElementById('cardBallonDior').value = card.ballonDior;
+            editIndex = index;
+        }
+
+        function searchCards() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const filteredCards = cardList.filter(card => 
+                card.name.toLowerCase().includes(searchQuery) || 
+                card.details.toLowerCase().includes(searchQuery) ||
+                card.ballonDior.toLowerCase().includes(searchQuery)
+            );
+            displayCards(filteredCards);
+        }
+
+        function displayCards(cards = cardList) {
+            const cardListElement = document.getElementById('cardList');
+            cardListElement.innerHTML = '';
+
+            if (cards.length === 0) {
+                cardListElement.innerHTML = '<p>No cards found.</p>';
+                return;
+            }
+
+            cards.forEach((card, index) => {
+                const cardItem = document.createElement('div');
+                cardItem.classList.add('card-item');
+                cardItem.innerHTML = `
+                    <strong>${card.name}</strong>
+                    <p>${card.details}</p>
+                    <p><strong>Wins:</strong> ${card.wins}</p>
+                    <p><strong>Losses:</strong> ${card.losses}</p>
+                    <p><strong>Ties:</strong> ${card.ties}</p>
+                    <p><strong>Ballon Dior:</strong> ${card.ballonDior}</p>
+                    <button class="edit-button" onclick="editCard(${index})">Edit</button>
+                `;
+                cardListElement.appendChild(cardItem);
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('cardName').value = '';
+            document.getElementById('cardDetails').value = '';
+            document.getElementById('cardWins').value = '';
+            document.getElementById('cardLosses').value = '';
+            document.getElementById('cardTies').value = '';
+            document.getElementById('cardBallonDior').value = '';
+        }
+    </script>
+</body>
+</html>
