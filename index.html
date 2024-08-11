@@ -1,22 +1,3 @@
-let cardList = [];
-let editIndex = -1;
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadCards();
-});
-
-function toggleForm() {
-    const form = document.getElementById('cardForm');
-    form.style.display = form.style.display === 'block' ? 'none' : 'block';
-}
-
-function addCard() {
-    const name = document.getElementById('cardName').value;
-    const details = document.getElementById('cardDetails').value;
-    const wins = parseInt(document.getElementById('cardWins').value) || 0;
-    const losses = parseInt(document.getElementById('cardLosses').value) || 0;
-    const ties = parseInt(document.getElementById('cardTies').value) || 0;
-    const ballonDior = document.getElementById('cardBallonDior').value;
 <!DOCTYPE html>
 <html lang="en">
 <head>
